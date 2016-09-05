@@ -1,20 +1,15 @@
-function union() {
-    console.log('click');
-    chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-        if (changeInfo.status == 'complete') {
-            // Execute some script when the page is fully (DOM) ready
-            chrome.tabs.executeScript(tabs[0].id, {file: "union.js"}, function() {
-                chrome.tabs.executeScript(tabs[0].id, {code: "login();"});
+function scrapeCurrentTab() {
+    chrome.tabs.getSelected(null, function(tab){
+        chrome.tabs.executeScript(tab.id, {file: 'jquery.js'}, function(response) { 
+            chrome.tabs.executeScript(tab.id, {file: 'scrape.js'}, function(response) { 
+                chrome.tabs.executeScript(tab.id, {code: 'scrape()'}, function() {
+                });
             });
-        }
-    });
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        // chrome.tabs.update( tabs[0].id, { url: "http://unionbank.co.il//" } );
-        chrome.tabs.executeScript(tabs[0].id, {file: "union.js"}, 
-            function() {
-                chrome.tabs.executeScript(tabs[0].id, {code: "enter();"});
-            });
+        });
     });
 }
 
-document.getElementById('union').addEventListener('click', union);
+// handle click on popup link
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('scrape').addEventListener('click', scrapeCurrentTab);
+});
