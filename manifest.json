@@ -1,11 +1,10 @@
 {
     "manifest_version": 2,
-    "name": "Autobank",
+    "name": "ygrab",
     "description": "Extract bank statements for YNAB",
     "version": "1.0",
     "permissions": [
-        "https://hb.unionbank.co.il/*",
-        "file://*/ubi-account.html"
+        "https://hb.unionbank.co.il/*"
     ],
     "icons": {
         "128": "icon128.png"
