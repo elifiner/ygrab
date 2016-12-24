@@ -1,7 +1,7 @@
 function scrape(config) {
     var table = [];
 
-    $(config.query).find('tr').each(function(itr, tr) {
+    $(config.table).find('tr').each(function(itr, tr) {
         var row = [];
         $(tr).find('td').each(function(itd, td) {
             row.push($(td).text().trim());
