@@ -11,7 +11,9 @@ $(function () {
             query: 'table#ctlActivityTable',
             columns: { date: 1, payee: 2, category: null, memo: null, outflow: 4, inflow: 5 },
             dateFormat: 'DD/MM/YY',
-            filename: 'union-transactions-{date}.csv'
+            filename: 'union-transactions-{date}.csv',
+            ignoreTopRows: 0,
+            ignoreBottomRows: 0,
         },
 
         {
@@ -19,7 +21,13 @@ $(function () {
             logo: "logos/union_bank_of_israel.jpg",
             urls: [
                 "https://hb.unionbank.co.il/*/CreditCard/DisplayCreditCardActivity.aspx",
-            ]
+            ],
+            query: 'table#ctlRegularTransactions',
+            columns: { date: 0, payee: 1, category: null, memo: null, outflow: 4, inflow: null },
+            dateFormat: 'DD/MM/YY',
+            filename: 'union-credit-card-{date}.csv',
+            ignoreTopRows: 0,
+            ignoreBottomRows: 1,
         }
     ]
 

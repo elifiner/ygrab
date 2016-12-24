@@ -18,6 +18,8 @@ function scrape(config) {
         }
     });
 
+    table = table.slice(config.ignoreTopRows, table.length - config.ignoreBottomRows);
+
     var filename = config.filename;
     filename = filename.replace('{date}', moment().format('YYYY-MM-DD'));
 
