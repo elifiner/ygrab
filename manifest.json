@@ -4,7 +4,8 @@
     "description": "Extract bank statements for YNAB",
     "version": "1.0",
     "permissions": [
-        "https://hb.unionbank.co.il/*"
+        "https://hb.unionbank.co.il/*",
+        "file:///.../*.html"
     ],
     "icons": {
         "128": "icon128.png"
