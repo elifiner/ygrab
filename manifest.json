@@ -2,7 +2,9 @@
     "manifest_version": 2,
     "name": "ygrab",
     "description": "Extract bank statements for YNAB",
-    "version": "1.0",
+    "homepage_url": "https://github.com/elifiner/ygrab",
+    "version": "0.1",
+
     "permissions": [
         "activeTab"
     ],
