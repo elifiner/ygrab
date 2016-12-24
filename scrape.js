@@ -1,34 +1,41 @@
 function scrape() {
-    // maybe create a config screen for this?
-    var PAYEES = {
-        'ויזה כ.א.ל י': 'קנדה',
-    }
+    var config = {
+        query: 'table#ctlActivityTable',
+        columns: {
+            date: 1,
+            payee: 2,
+            category: null,
+            memo: null,
+            outflow: 4,
+            inflow: 5
+        },
+        dateFormat: 'DD/MM/YY',
+        filename: 'union-transactions-{date}.csv'
+    };
 
-    function parseDate(dateString) {
-        var regex = /(\d{2})\/(\d{2})\/(\d{2})/;
-        var values = regex.exec(dateString);
-        return new Date(2000 + parseInt(values[3]), parseInt(values[2] - 1), parseInt(values[1]));
-    }
+    var table = [];
 
-    var table = []
-    $('table#ctlActivityTable').find('tr').each(function(itr, tr) {
+    $(config.query).find('tr').each(function(itr, tr) {
         var row = [];
         $(tr).find('td').each(function(itd, td) {
             row.push($(td).text().trim());
         });
         if (row.length != 0) {
             table.push({
-                date: parseDate(row[1]).toISOString().slice(0, 10),
-                payee: PAYEES[row[2]] ? PAYEES[row[2]] : row[2],
-                category: '',
-                memo: row[2],
-                outflow: row[4],
-                inflow: row[5],
+                date: moment(row[config.columns.date], config.dateFormat).format('YYYY-MM-DD'),
+                payee: row[config.columns.payee],
+                category: row[config.columns.category],
+                memo: row[config.columns.memo],
+                outflow: row[config.columns.outflow],
+                inflow: row[config.columns.inflow],
             });
         }
     });
 
-    saveAs(makeYnabCsv(table), 'ynab-transactions-' + new Date().toISOString().slice(0, 10) + '.csv');
+    var filename = config.filename;
+    filename = filename.replace('{date}', moment().format('YYYY-MM-DD'));
+
+    saveAs(makeYnabCsv(table), filename);
 }
 
 function makeYnabCsv(table) {
@@ -56,7 +63,7 @@ function makeYnabCsv(table) {
 
 function saveAs(data, filename) {
     var link = document.createElement('a');
-    var url = "data:text/plain; charset=UTF-8," + encodeURIComponent(data);
+    var url = 'data:text/plain; charset=UTF-8,' + encodeURIComponent(data);
     link.href = url;
     link.download = filename;
     link.click();

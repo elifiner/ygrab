@@ -8,13 +8,18 @@ $(function () {
                 "https://hb.unionbank.co.il/*/Accounts/ExtendedActivity.aspx",
                 "file:///*.html",
             ]
+        },
+        {
+            name: "Union Bank of Israel / Credit Card",
+            logo: "logos/union_bank_of_israel.jpg",
+            urls: [
+                "https://hb.unionbank.co.il/*/CreditCard/DisplayCreditCardActivity.aspx",
+            ]
         }
     ]
 
     function matches(text, patterns) {
         for (var i = 0; i < patterns.length; i++) {
-            console.log(patterns[i]);
-            console.log(text);
             regex = patterns[i].replace(/\*/g, "[^ ]*");
             if (text.match(regex) != null) {
                 return true;
@@ -42,16 +47,22 @@ $(function () {
         });
     }
 
+    function loadContentScripts(scripts) {
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            chrome.tabs.executeScript(tabs[0].id, scripts[0], function(response) {
+                loadContentScripts(scripts.slice(1, scripts.length));
+            });
+        });
+    }
+
     function bindEvents() {
         $('#scrape').click(function() {
-            chrome.tabs.getSelected(null, function(tab){
-                chrome.tabs.executeScript(tab.id, {file: 'jquery.js'}, function(response) { 
-                    chrome.tabs.executeScript(tab.id, {file: 'scrape.js'}, function(response) { 
-                        chrome.tabs.executeScript(tab.id, {code: 'scrape()'}, function() {
-                        });
-                    });
-                });
-            });
+            loadContentScripts([
+                {file: 'jquery.js'},
+                {file: 'moment.js'},
+                {file: 'scrape.js'},
+                {code: 'scrape()'},
+            ]);
         });        
     }
 
