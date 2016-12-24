@@ -1,6 +1,6 @@
 function scrape() {
     // maybe create a config screen for this?
-    PAYEES = {
+    var PAYEES = {
         'ויזה כ.א.ל י': 'קנדה',
     }
 
@@ -10,7 +10,7 @@ function scrape() {
         return new Date(2000 + parseInt(values[3]), parseInt(values[2] - 1), parseInt(values[1]));
     }
 
-    table = []
+    var table = []
     $('table#ctlActivityTable').find('tr').each(function(itr, tr) {
         var row = [];
         $(tr).find('td').each(function(itd, td) {
@@ -39,9 +39,9 @@ function makeYnabCsv(table) {
         return '"' + s.replace(/"/g, '""') + '"';
     }
 
-    data = [];
+    var data = [];
     data.push('Date,Payee,Category,Memo,Outflow,Inflow');
-    for (i = 0; i < table.length; i++) {
+    for (var i = 0; i < table.length; i++) {
         data.push([
             quote(table[i].date),
             quote(table[i].payee),
