@@ -1,36 +1,5 @@
 $(function () {
     // todo: move to configuration JSON file
-    var SITES = [
-        {
-            name: "Union Bank of Israel / Transactions",
-            logo: "logos/union_bank_of_israel.jpg",
-            urls: [
-                "https://hb.unionbank.co.il/*/Accounts/ExtendedActivity.aspx",
-                "file:///*.html",
-            ],
-            query: 'table#ctlActivityTable',
-            columns: { date: 1, payee: 2, category: null, memo: null, outflow: 4, inflow: 5 },
-            dateFormat: 'DD/MM/YY',
-            filename: 'union-transactions-{date}.csv',
-            ignoreTopRows: 0,
-            ignoreBottomRows: 0,
-        },
-
-        {
-            name: "Union Bank of Israel / Credit Card",
-            logo: "logos/union_bank_of_israel.jpg",
-            urls: [
-                "https://hb.unionbank.co.il/*/CreditCard/DisplayCreditCardActivity.aspx",
-            ],
-            query: 'table#ctlRegularTransactions',
-            columns: { date: 0, payee: 1, category: null, memo: null, outflow: 4, inflow: null },
-            dateFormat: 'DD/MM/YY',
-            filename: 'union-credit-card-{date}.csv',
-            ignoreTopRows: 0,
-            ignoreBottomRows: 1,
-        }
-    ]
-
     function matches(text, patterns) {
         for (var i = 0; i < patterns.length; i++) {
             regex = patterns[i].replace(/\*/g, "[^ ]*");
@@ -42,8 +11,8 @@ $(function () {
     }
 
     function detectSite(tab) {
-        for (i = 0; i < SITES.length; i++) {
-            var site = SITES[i];
+        for (i = 0; i < ygrab_sites.length; i++) {
+            var site = ygrab_sites[i];
             if (matches(tab.url, site.urls)) {
                 return site;
             }
@@ -86,7 +55,7 @@ $(function () {
         loadContentScripts(tab, [
             {file: 'jquery.js'},
             {file: 'moment.js'},
-            {file: 'scrape.js'}
+            {file: 'scrape.js'}            
         ]);
     });
 });
