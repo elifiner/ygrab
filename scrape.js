@@ -1,4 +1,8 @@
 function scrape() {
+    // maybe create a config screen for this?
+    PAYEES = {
+        'ויזה כ.א.ל י': 'קנדה',
+    }
 
     function parseDate(dateString) {
         var regex = /(\d{2})\/(\d{2})\/(\d{2})/;
@@ -15,9 +19,9 @@ function scrape() {
         if (row.length != 0) {
             table.push({
                 date: parseDate(row[1]).toISOString().slice(0, 10),
-                payee: row[2],
+                payee: PAYEES[row[2]] ? PAYEES[row[2]] : row[2],
                 category: '',
-                memo: '',
+                memo: row[2],
                 outflow: row[4],
                 inflow: row[5],
             });
