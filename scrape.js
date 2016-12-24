@@ -1,18 +1,4 @@
-function scrape() {
-    var config = {
-        query: 'table#ctlActivityTable',
-        columns: {
-            date: 1,
-            payee: 2,
-            category: null,
-            memo: null,
-            outflow: 4,
-            inflow: 5
-        },
-        dateFormat: 'DD/MM/YY',
-        filename: 'union-transactions-{date}.csv'
-    };
-
+function scrape(config) {
     var table = [];
 
     $(config.query).find('tr').each(function(itr, tr) {
@@ -55,7 +41,7 @@ function makeYnabCsv(table) {
             quote(table[i].category),
             quote(table[i].memo),
             quote(table[i].outflow),
-            quote(table[i].inflo),
+            quote(table[i].inflow),
         ].join());
     }
     return data.join('\n');
