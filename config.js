@@ -6,12 +6,8 @@ var ygrab_sites = [
             "https://hb.unionbank.co.il/*/Accounts/ExtendedActivity.aspx",
             "file:///*.html",
         ],
-        table: 'table#ctlActivityTable',
-        columns: { date: 1, payee: 2, category: null, memo: null, outflow: 4, inflow: 5 },
-        filename: 'union-transactions-{date}.csv',
-        dateFormat: 'DD/MM/YY',
-        ignoreTopRows: 0,
-        ignoreBottomRows: 0,
+        scraper: 'Ygrab.scrapeUnionTransactions',
+        filename: 'union-transactions-{date}.csv'
     },
 
     {
@@ -20,11 +16,7 @@ var ygrab_sites = [
         urls: [
             "https://hb.unionbank.co.il/*/CreditCard/DisplayCreditCardActivity.aspx",
         ],
-        table: 'table#ctlRegularTransactions',
-        columns: { date: 0, payee: 1, category: null, memo: null, outflow: 4, inflow: null },
-        filename: 'union-credit-card-{date}.csv',
-        dateFormat: 'DD/MM/YY',
-        ignoreTopRows: 0,
-        ignoreBottomRows: 1,
+        scraper: 'Ygrab.scrapeUnionCreditCard',
+        filename: 'union-credit-card-{date}.csv'
     }
 ];

@@ -33,12 +33,11 @@ $(function () {
 
     function bindEvents(tab, site) {
         $('#scrape').click(function() {
-            chrome.tabs.executeScript(tab.id, {code: 'scrape(' + JSON.stringify(site) + ')'});
+            chrome.tabs.executeScript(tab.id, {code: site.scraper + '(' + JSON.stringify(site) + ')'});
         });
     }
 
     function loadContentScripts(tab, scripts) {
-        console.log(scripts);
         chrome.tabs.executeScript(tab.id, scripts[0], function(response) {
             if (scripts.length > 1) {
                 loadContentScripts(tab, scripts.slice(1, scripts.length));

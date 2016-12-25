@@ -1,58 +1,91 @@
-function scrape(config) {
-    var table = [];
+var Ygrab = {
+    
+    // =========================== Scrapers ===========================
 
-    $(config.table).find('tr').each(function(itr, tr) {
-        var row = [];
-        $(tr).find('td').each(function(itd, td) {
-            row.push($(td).text().trim());
-        });
-        if (row.length != 0) {
-            table.push({
-                date: moment(row[config.columns.date], config.dateFormat).format('YYYY-MM-DD'),
-                payee: row[config.columns.payee],
-                category: row[config.columns.category],
-                memo: row[config.columns.memo],
-                outflow: row[config.columns.outflow],
-                inflow: row[config.columns.inflow],
+    scrapeUnionTransactions: function (site) {
+        var table = this._getTableValues('table#ctlActivityTable');
+        var data = []
+        for (var i = 0; i < table.length; i++) {
+            var row = table[i];
+            data.push({
+                date: moment(row[1], 'DD/MM/YY').format('YYYY-MM-DD'),
+                payee: row[2],
+                category: null,
+                memo: null,
+                outflow: row[4],
+                inflow: row[5],
             });
         }
-    });
+        data = data.slice(1, data.length);
+        this._saveAs(this._makeYnabCsv(data), this._makeFilename(site.filename));
+    },
 
-    table = table.slice(config.ignoreTopRows, table.length - config.ignoreBottomRows);
-
-    var filename = config.filename;
-    filename = filename.replace('{date}', moment().format('YYYY-MM-DD'));
-
-    saveAs(makeYnabCsv(table), filename);
-}
-
-function makeYnabCsv(table) {
-    function quote(s) {
-        if (!s) {
-            return s;
+    scrapeUnionCreditCard: function (site) {
+        var table = this._getTableValues('table#ctlRegularTransactions');
+        var data = []
+        for (var i = 0; i < table.length; i++) {
+            var row = table[i];
+            data.push({
+                date: moment(row[0], 'DD/MM/YY').format('YYYY-MM-DD'),
+                payee: row[1],
+                category: null,
+                memo: null,
+                outflow: row[4],
+                inflow: null,
+            });
         }
-        return '"' + s.replace(/"/g, '""') + '"';
-    }
+        data = data.slice(1, data.length - 1);
+        this._saveAs(this._makeYnabCsv(data), this._makeFilename(site.filename));
+    },
 
-    var data = [];
-    data.push('Date,Payee,Category,Memo,Outflow,Inflow');
-    for (var i = 0; i < table.length; i++) {
-        data.push([
-            quote(table[i].date),
-            quote(table[i].payee),
-            quote(table[i].category),
-            quote(table[i].memo),
-            quote(table[i].outflow),
-            quote(table[i].inflow),
-        ].join());
-    }
-    return data.join('\n');
-}
+    // =========================== Utilities ===========================
 
-function saveAs(data, filename) {
-    var link = document.createElement('a');
-    var url = 'data:text/plain; charset=UTF-8,' + encodeURIComponent(data);
-    link.href = url;
-    link.download = filename;
-    link.click();
+    _getTableValues: function (query) {
+        var table = [];
+        $(query).find('tr').each(function(itr, tr) {
+            var row = [];
+            $(tr).find('td').each(function(itd, td) {
+                row.push($(td).text().trim());
+            });
+            table.push(row);
+        });
+        return table;
+    },
+
+    _makeFilename: function (template) {
+        var filename = template;
+        var filename = filename.replace('{date}', moment().format('YYYY-MM-DD'));
+        return filename;
+    },
+
+    _makeYnabCsv: function (table) {
+        function quote(s) {
+            if (!s) {
+                return s;
+            }
+            return '"' + s.replace(/"/g, '""') + '"';
+        }
+
+        var data = [];
+        data.push('Date,Payee,Category,Memo,Outflow,Inflow');
+        for (var i = 0; i < table.length; i++) {
+            data.push([
+                quote(table[i].date),
+                quote(table[i].payee),
+                quote(table[i].category),
+                quote(table[i].memo),
+                quote(table[i].outflow),
+                quote(table[i].inflow),
+            ].join());
+        }
+        return data.join('\n');
+    },
+
+    _saveAs: function (data, filename) {
+        var link = document.createElement('a');
+        var url = 'data:text/plain; charset=UTF-8,' + encodeURIComponent(data);
+        link.href = url;
+        link.download = filename;
+        link.click();
+    }
 }
